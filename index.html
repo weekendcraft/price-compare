@@ -64,6 +64,7 @@
   .fb a:hover { color: #3b82f6; border-color: #3b82f6; }
   @media (prefers-color-scheme: dark) { .fb a { background: #262a31; color: #9aa0a6; border-color: #3a4048; } .fb a:hover { color: #60a5fa; border-color: #60a5fa; } }
 </style>
+<script defer src="https://stats.kosasih.xyz/script.js" data-website-id="89cf91a1-c34b-44b4-9c60-0675780d56dc"></script>
 </head>
 <body>
   <h1>⚖️ Cross-currency price compare</h1>
@@ -122,7 +123,7 @@
       <span id="fxnote">loading rates…</span>
       <button id="refresh">↻ refresh rates</button>
     </div>
-    <div style="text-align:center; font-size:0.68rem; color:#9aa0a6; margin-top:8px;"><span id="appver">v10</span></div>
+    <div style="text-align:center; font-size:0.68rem; color:#9aa0a6; margin-top:8px;"><span id="appver">v11</span></div>
   </div>
 
   <div class="fb"><a href="https://docs.google.com/forms/d/e/1FAIpQLSeJ4P2Ch76kIHVl6KZBA1MNx8pil4kZ32nLrQDQLr8oKQllVg/viewform?usp=pp_url&entry.267710623=price-compare" target="_blank" rel="noopener">💬 Send feedback</a></div>
@@ -148,6 +149,26 @@ function setRates(usdRates, date, live){
   $("fxnote").textContent = (live ? "Live rates" : "⚠️ Offline snapshot") + " · " + date + " · open.er-api.com";
   fillSelects();
   recalc();
+  if (manualRefresh) {
+    manualRefresh = false;
+    if (typeof umami !== "undefined") umami.track("refresh-rates", { result: live ? "live" : "stale" });
+  }
+}
+
+// analytics: one debounced 'compare' event per burst of edits (Umami)
+var compareTimer = null;
+var manualRefresh = false;
+function trackCompare(out){
+  if (typeof umami === "undefined") return;
+  clearTimeout(compareTimer);
+  compareTimer = setTimeout(function(){
+    umami.track("compare", {
+      base: $("base").value,
+      curA: $("curA").value || "",
+      curB: $("curB").value || "",
+      mode: (isFinite(out.A.per) && isFinite(out.B.per)) ? "unit" : "pack"
+    });
+  }, 2500);
 }
 
 function curList(){
@@ -250,6 +271,7 @@ function recalc(){
   var diffs = $("diffs");
   diffs.innerHTML = "";
   if (!(aPriceOK && bPriceOK)) { v.textContent = "Enter both prices"; return; }
+  trackCompare(out);
 
   if (!sameDim) {
     v.textContent = "⚠️ A is " + (out.A.dim === "V" ? "volume" : "weight") + ", B is " + (out.B.dim === "V" ? "volume" : "weight") + " — pack prices only, no unit-price ranking";
@@ -301,7 +323,7 @@ function recalc(){
 
 ["base","curA","curB","unitA","unitB"].forEach(function(id){ $(id).addEventListener("change", recalc); });
 ["priceA","priceB","wtA","wtB"].forEach(function(id){ $(id).addEventListener("input", recalc); });
-$("refresh").addEventListener("click", loadRates);
+$("refresh").addEventListener("click", function(){ manualRefresh = true; loadRates(); });
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function(){ navigator.serviceWorker.register('./sw.js'); });
