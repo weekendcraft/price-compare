@@ -23,7 +23,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #17140e; --ink: #f0e9da; --muted: #a89e8a; --line: #f0e9da;
-    --card: #201c14; --accent: #ffd23f; --accent-ink: #17140e;
+    --card: #201c14; --accent: #d4a72c; --accent-ink: #17140e;
     --tie-ink: #a89e8a; --faint: #4a4436; --note-bg: #2e2917; --stat-card: #262117;
   }
 }
@@ -141,6 +141,16 @@ button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink)
 .fx { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 12px; border-top: 2px dotted var(--faint); padding-top: 12px; }
 .fx span { font-size: 0.68rem; color: var(--muted); }
 .appver { text-align: center; font-size: 0.68rem; color: var(--muted); margin-top: 10px; }
+.fb { display: block; text-align: center; margin: 16px 0 4px; }
+.fb a {
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--ink); text-decoration: none;
+  border: 2px solid var(--line); border-radius: 999px;
+  background: var(--card); padding: 7px 16px;
+  display: inline-block; box-shadow: 3px 3px 0 var(--ink);
+}
+.fb a:hover { background: var(--accent); color: var(--accent-ink); }
+@media (prefers-color-scheme: dark) { .fb a { box-shadow: 3px 3px 0 #000; } }
 </style>
 <script defer src="https://stats.kosasih.xyz/script.js" data-website-id="89cf91a1-c34b-44b4-9c60-0675780d56dc"></script>
 </head>
@@ -204,7 +214,7 @@ button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink)
     <div class="appver"><span id="appver">v11</span></div>
   </div>
 
-  <div class="fb"><a href="https://docs.google.com/forms/d/e/1FAIpQLSeJ4P2Ch76kIHVl6KZBA1MNx8pil4kZ32nLrQDQLr8oKQllVg/viewform?usp=pp_url&entry.267710623=price-compare" target="_blank" rel="noopener">💬 Send feedback</a></div>
+  <div class="fb"><a href="https://docs.google.com/forms/d/e/1FAIpQLSeJ4P2Ch76kIHVl6KZBA1MNx8pil4kZ32nLrQDQLr8oKQllVg/viewform?usp=pp_url&entry.267710623=price-compare" target="_blank" rel="noopener">Send feedback</a></div>
 
 <script>
 "use strict";
